@@ -71,13 +71,13 @@ def find_relevant_articles(response, query):
     url_list = json.loads(urls)
     return url_list
 
-# def scrape(article_urls):
-#     """
-#     scrapes the information from the article 
-#     """
-#     loader = UnstructuredURLLoader(urls=article_urls)
-#     data = loader.load()
-#     return data
+def scrape(article_urls):
+    """
+    scrapes the information from the article 
+    """
+    loader = UnstructuredURLLoader(urls=article_urls)
+    data = loader.load()
+    return data
 
 
 def get_information_from_urls(article_urls):
@@ -115,7 +115,10 @@ def summarize(information):
         chunk_overlap=20,
         length_function=len,
     )
-    texts = text_splitter.create_documents(information)
+    if len(information) < 2000:
+        texts = information
+    else:
+        texts = text_splitter.create_documents(information)
     print(texts)
     template = """
     write a consice summary of the articles
@@ -154,7 +157,9 @@ def main():
                         st.error(f"Error fetching preview for URL: {url}")
                         st.error(str(e))
 
-        data = get_information_from_urls(url_list)
+        data = scrape(url_list)
+        print(data)
+        # data = get_information_from_urls(url_list)
         summary = summarize(data)
         st.markdown("**Answer**")
         st.write(summary)
