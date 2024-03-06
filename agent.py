@@ -88,7 +88,7 @@ def get_information_from_urls(article_urls):
     options.headless = True
 
     # Initialize the WebDriver
-    service = Service(ChromeDriverManager().install())
+    service = Service(ChromeDriverManager(driver_version='122.0.6261.112').install())
     driver = webdriver.Chrome(service=service, options=options)
 
     information = []
